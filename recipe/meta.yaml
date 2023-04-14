@@ -12,27 +12,40 @@ source:
 
 build:
   number: 0
-  noarch: python
-  script: {{ PYTHON }} -m pip install . -vv
+  skip: true  # [py>=311 or s390x]
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
   host:
+    - python
     - pip
-    - python >=3.6
+    - wheel
+    - setuptools
   run:
     - numba
     - numpy
-    - python >=3.6
+    - python
 
 test:
   imports:
     - window_ops
+  
+  requires:
+    - pip
+
+  commands:
+    - pip check
 
 about:
-  doc_url: https://jose-moralez.github.io/window_ops/
+  doc_url: https://github.com/jmoralez/window_ops
   dev_url: https://github.com/jose-moralez/window_ops
   home: https://github.com/jose-moralez/window_ops
   summary: Implementations of window operations such as rolling and expanding.
+  description: |
+    This library is intended to be used as an alternative to pd.Series.rolling and pd.Series.expanding 
+    to gain a speedup by using numba optimized functions operating on numpy arrays. 
+    There are also online classes for more efficient updates of window statistics.
+
   license: Apache-2.0
   license_family: APACHE
   license_file: LICENSE
